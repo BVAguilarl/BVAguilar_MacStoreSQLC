@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+        <div class="container">
+            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    @if (Session["SessionUsuarioEmail"] != null)
+                    {
+                        @*<li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+            <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+            <li>@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>*@
+                        <li>
+                            <img src="https://cdn-icons-png.flaticon.com/512/6073/6073873.png" height="50" width="53" />
+                        </li>
+                        <li class="nav-link">
+                            <h5 style="color: white;"> @Convert.ToString(Session["SessionUsuarionNombre"]) </h5>
+                        </li>
+
+                        @*<li>@Html.ActionLink("Usuarios Registrados", "GetAll", "Usuario", new { area = "" }, new { @class = "nav-link" })</li>*@
+                        <li style="position: relative; left: 75%; ">@Html.ActionLink("Cerrar Sesion |", "CerrarSesion", "Login", new { area = "" }, new { @class = "nav-link" })</li>
+
+                    }
+                    else
+                    {
+                        <li style="position: relative; left: 80%; ">@Html.ActionLink("Iniciar Sesion |", "IniciarSesion", "Login", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li style="position: relative; left: 81%; ">@Html.ActionLink("Registar", "Registrar", "Login", new { area = "" }, new { @class = "nav-link" })</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+

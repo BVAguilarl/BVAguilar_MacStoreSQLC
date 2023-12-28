@@ -1,0 +1,69 @@
+﻿@{
+    ViewBag.Title = "Contact";
+}
+
+@if (Session["SessionUsuarioEmail"] != null)
+{
+    <main aria-labelledby="title">
+        <h2 id="title">@ViewBag.Title.</h2>
+        <h3>@ViewBag.Message</h3>
+
+        <address>
+            One Microsoft Way<br />
+            Redmond, WA 98052-6399<br />
+            <abbr title="Phone">P:</abbr>
+            425.555.0100
+        </address>
+
+        <address>
+            <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
+            <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
+        </address>
+    </main>
+
+
+}
+else
+{
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+
+    <div class="alert alert-danger d-flex justify-content-center" role="alert">
+        <div class="row">
+            <div class="col-md-2">
+                <img src="https://cdn-icons-png.flaticon.com/512/1182/1182730.png" height="45" width="45" />
+            </div>
+            <div class="col-md-7 text-center">
+                <h5> Aun no ha iniciado sesion para tener acceso a esta pagina </h5>
+            </div>
+        </div>
+    </div>
+
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+}
+
+<style>
+
+    body {
+        background-image: url("https://cdn.wallpapersafari.com/25/48/q5gu9Y.jpg");
+        background-repeat: no-repeat;
+        background-position: center center;
+        font-family: "poppins";
+        letter-spacing: 3px;
+    }
+
+    img {
+        opacity: 0.6;
+    }
+</style>

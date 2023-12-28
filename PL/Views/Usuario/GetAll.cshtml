@@ -1,0 +1,490 @@
+﻿@model ML.Usuario
+@{
+    ViewBag.Title = "GetAll";
+
+}
+
+<body>
+
+    <br />
+    <br />
+
+    <h2 class="text-center"> USUARIOS </h2>
+
+    <br />
+
+    @if (Session["SessionUsuarioEmail"] != null)
+    {
+        <div class="container">
+
+            @if (Model.Usuarios != null)
+            {
+                <br />
+                <br />
+
+                <div class="container">
+                    <div class="table table-responsive">
+
+                        <table id="TableUsuario" class="table table-hover">
+                            <thead class="text-center">
+                                <tr>
+                                    <td>Actualizar</td>
+                                    <td class="visually-hidden">ID</td>
+                                    <td>Nombre</td>
+                                    <td>Apellido Paterno</td>
+                                    <td>Apellido Materno</td>
+                                    <td>Edad</td>
+                                    <td>Email</td>
+                                    @*<td>Contraseña</td>*@
+                                    <td>Eliminar</td>
+                                </tr>
+                            </thead>
+
+                            <tbody class="text-center">
+
+                                @foreach (ML.Usuario usuario in Model.Usuarios)
+                                {
+
+                                    <tr>
+                                        <td>
+                                            <button onclick="GetById(@usuario.IdUsuario)" class="btn btn-warning"> <i class="bi bi-pencil"></i> </button>
+                                        </td>
+                                        <td class="visually-hidden">@usuario.IdUsuario</td>
+                                        <td>@usuario.Nombre</td>
+                                        <td>@usuario.ApellidoPaterno</td>
+                                        <td>@usuario.ApellidoMaterno</td>
+                                        <td>@usuario.Edad</td>
+                                        <td>@usuario.Email</td>
+                                        @*<td>@usuario.Contraseña</td>*@
+                                        <td>
+                                            <button id="BtnDelete" onclick="DeleteUsuario(@usuario.IdUsuario)" class="btn btn-danger"> <i class="bi bi-trash"></i> </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+            }
+            else
+            {
+                <span class="bg-danger"> Aun no hay ningun registro de usuario</span>
+            }
+
+            @* -------- Modal --------*@
+            <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content" style="width:560px">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="Accion">Formulario</h5>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <label type="text" class="hidden" id="IdUsuario"></label>
+                                    <label for="recipient-name" class="col-form-label">Nombre(s):</label>
+                                    <input type="text" class="form-control" id="txtNombre" onkeypress="return SoloLetras(event, this)">
+                                    <div style="color: red; letter-spacing: 1px;">
+                                        @Html.ValidationMessageFor(model => Model.Nombre, "", new { @class = "text-danger", @id = "lblNombreErrorMessage" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Apellido Paterno:</label>
+                                    <input type="text" class="form-control" id="txtApellidoPaterno" onkeypress="return SoloLetras(event, this)">
+                                    <div style="color: red; letter-spacing: 1px;">
+                                        @Html.ValidationMessageFor(model => Model.ApellidoPaterno, "", new { @class = "text-danger", @id = "lblApellidoPaternoErrorMessage" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Apellido Materno:</label>
+                                    <input type="text" class="form-control" id="txtApellidoMaterno" onkeypress="return SoloLetras(event, this)">
+                                    <div style="color: red; letter-spacing: 1px;">
+                                        @Html.ValidationMessageFor(model => Model.ApellidoMaterno, "", new { @class = "text-danger", @id = "lblApellidoMaternoErrorMessage" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Edad:</label>
+                                    <input type="text" class="form-control" id="txtEdad" onkeypress="return SoloNumeros(event, this)">
+                                    <div style="color: red; letter-spacing: 1px;">
+                                        @Html.ValidationMessageFor(model => Model.Edad, "", new { @class = "text-danger", @id = "lblEdadErrorMessage" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Email:</label>
+                                    <input type="text" class="form-control" id="txtEmail" onpaste="return false">
+                                    <input placeholder=" Confirmar E-mail" type="text" class="form-control" id="txtConfirmEmail" onpaste="return false" onblur="return Correo()">
+                                    <div style="color: red; letter-spacing: 1px;">
+                                        @Html.ValidationMessageFor(model => Model.Email, "", new { @class = "text-danger", @id = "lblCorreoErrorMessage" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Contraseña:</label>
+                                    <input type="password" class="form-control" id="txtContraseña" onpaste="return false">
+                                    <input placeholder=" Confirmar Contraseña" type="password" class="form-control" id="txtConfirmContraseña" onpaste="return false" onblur="return ValidationPassword()">
+                                    <div style="color: red; letter-spacing: 1px;">
+                                        @Html.ValidationMessageFor(model => Model.Contraseña, "", new { @class = "text-danger", @id = "lblPasswordErrorMessage" })
+                                    </div>
+                                </div>
+                                <br />
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="btnAgregar" onclick="Guardar()" class="btn btn-success">Guardar <i class="bi bi-check-circle"></i></button>
+                            <button type="button" onclick="CerrarModal()" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+
+        <div class="alert alert-danger d-flex justify-content-center" role="alert">
+            <div class="row">
+                <div class="col-md-2">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1182/1182730.png" height="45" width="45" />
+                </div>
+                <div class="col-md-7 text-center">
+                    <h5> Aun no ha iniciado sesion para tener acceso a esta pagina </h5>
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+    }
+</body>
+
+<br />
+<br />
+<br />
+
+
+<style>
+
+    body {
+        background-image: url("https://cdn.wallpapersafari.com/25/48/q5gu9Y.jpg");
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-color: #dadada;
+        font-family: "poppins";
+        letter-spacing: 3px;
+    }
+
+    img {
+        opacity: 0.6;
+    }
+
+    table {
+        border: double;
+        backdrop-filter: blur(3px);
+        border-color: #cacaca70;
+    }
+
+</style>
+
+<script>
+
+    function ShowModal() {
+        //limpia y muestra el modal
+        $("#formModal input").val("");
+        $("#formModal").modal('show')
+    }
+
+    function CerrarModal() {
+        $("#formModal input").val("");
+        $("#formModal").modal('hide')
+    }
+
+    //-----------------  UPDATE
+    function Guardar() {
+
+        var IdUsuario = $('#IdUsuario').val();
+
+        var usuario = {
+            IdUsuario: IdUsuario,
+            Nombre: $('#txtNombre').val(),
+            ApellidoPaterno: $('#txtApellidoPaterno').val(),
+            ApellidoMaterno: $('#txtApellidoMaterno').val(),
+            Edad: $('#txtEdad').val(),
+            Email: $('#txtConfirmEmail').val(),
+            Contraseña: $('#txtConfirmContraseña').val()
+        }
+
+        $.ajax({
+            url: '/Usuario/Update',
+            type: 'POST',
+            dataType: 'json',
+            data: usuario,
+            success: function (result) {
+                alert('Se actualizaron correctamente los datos');
+
+                $('#formModal').modal('hide');
+                window.location.reload();
+
+                //var existente = $('#TableUsuario tbody tr[#Row="' + result.Object.IdUsuario + '"]');
+                //existente.find('td:eq(2)').text(result.Object.Nombre);
+                //existente.find('td:eq(3)').text(result.Object.ApellidoPaterno);
+                //existente.find('td:eq(4)').text(result.Object.ApellidoMaterno);
+                //existente.find('td:eq(5)').text(result.Object.Edad);
+                //existente.find('td:eq(6)').text(result.Object.Email);
+                //existente.find('td:eq(7)').text(result.Object.Contraseña);
+            },
+            error: function (ex) {
+                alert('Failed.' + ex);
+            }
+        });
+    }
+
+    //----------------- GETBYID
+
+    function GetById(IdUsuario) {
+        $.ajax({
+            type: 'POST',
+            url: '/Usuario/GetById',
+            dataType: 'json',
+            data: { IdUsuario: IdUsuario },
+            success: function (result) {
+                if (result.Object != null) {
+                    $('#IdUsuario').val(result.Object.IdUsuario);
+                    $('#txtNombre').val(result.Object.Nombre);
+                    $('#txtApellidoPaterno').val(result.Object.ApellidoPaterno);
+                    $('#txtApellidoMaterno').val(result.Object.ApellidoMaterno);
+                    $('#txtEdad').val(result.Object.Edad);
+                    $('#txtEmail').val(result.Object.Email);
+                    $('#txtContraseña').val(result.Object.Contraseña);
+
+                    $("#formModal").modal('show');
+                }
+                else {
+                    alert('No se encontró la información del usuario con el Id ' + IdUsuario);
+                }
+            },
+            error: function (error) {
+                alert('Error.' + error.statusText);
+            }
+        });
+    }
+
+    //----------------- DELETE
+    function DeleteUsuario(IdUsuario) {
+        $.ajax({
+            type: 'POST',
+            url: '/Usuario/DeleteUsuario',
+            dataType: 'json',
+            data: { IdUsuario: IdUsuario },
+            success: function (result) {
+                alert('Se elimino correctamente el usuario');
+                window.location.reload();
+            },
+            error: function (error) {
+                alert('No se pudo eliminar el usuario');
+            }
+        });
+    }
+
+    $(document).ready(function () {
+       
+
+    });
+
+    //Validaciones
+    function SoloLetras(event, textbox) {
+        var id = textbox.id
+        var input = event.key
+        var palabra = textbox.value
+
+
+        if (/^[a-zA-Z]+$/.test(input)) {
+            if (palabra != "") {
+                if (/^[A-Z][a-z]+$/.test(palabra + event.key)) {
+
+                    if (id == "txtNombre") {
+                        $("#lblNombreErrorMessage").text("")
+                        $("#txtNombre").css('border', '1px solid  #8ae34c', 'border - radius', '4px', 'box - shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)')   //desmarca el textbox que marca error
+
+                    }
+                    else {
+                        if (id == "txtApellidoPaterno") {
+                            $("#lblApellidoPaternoErrorMessage").text("")
+                            $("#txtApellidoPaterno").css('border', '1px solid  #8ae34c', 'border - radius', '4px', 'box - shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)')   //desmarca el textbox que marca error
+
+                        }
+                        else {
+                            if (id == "txtApellidoMaterno") {
+                                $("#lblApellidoMaternoErrorMessage").text("")
+                                $("#txtApellidoMaterno").css('border', '1px solid  #8ae34c', 'border - radius', '4px', 'box - shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)')   //desmarca el textbox que marca error
+
+                            }
+                        }
+                    }
+
+                    return true
+
+                }
+                else {
+
+                    if (id == "txtNombre") {
+                        $("#lblNombreErrorMessage").text("La primer letra debera ser mayuscula")
+                        $("#txtNombre").css('border', '1px solid red')
+                    } else {
+                        if (id == "txtApellidoPaterno") {
+                            $("#lblApellidoPaternoErrorMessage").text("La primer letra debera ser mayuscula")
+                            $("#txtApellidoPaterno").css('border', '1px solid red')
+                        } else {
+                            if (id == "txtApellidoMaterno") {
+                                $("#lblApellidoMaternoErrorMessage").text("La primer letra debera ser mayuscula")
+                                $("#txtApellidoMaterno").css('border', '1px solid red')
+                            }
+                        }
+                    }
+
+                    return false
+                }
+            }
+
+
+        } else {
+            if (id == "txtNombre") {
+                $("#lblNombreErrorMessage").text("Solo se aceptan letras en este campo")
+                $("#txtNombre").css('border', '1px solid red')
+            } else {
+                if (id == "txtApellidoPaterno") {
+                    $("#lblApellidoPaternoErrorMessage").text("Solo se aceptan letras en este campo")
+                    $("#txtApellidoPaterno").css('border', '1px solid red')
+                } else {
+                    if (id == "txtApellidoMaterno") {
+                        $("#lblApellidoMaternoErrorMessage").text("Solo se aceptan letras en este campo")
+                        $("#txtApellidoMaterno").css('border', '1px solid red')
+                    }
+                }
+            }
+            return false
+        }
+    }
+
+    function SoloNumeros(event, textbox) {
+        var id = textbox.id
+        var input = event.key
+
+        if (textbox.textLength < 3) {
+            if (/^[0-9]+$/.test(input)) {
+                return true
+            }
+            else {
+                if (id == "txtEdad") {
+                    $("#lblEdadErrorMessage").text("Solo se aceptan numeros en este campo")
+                    $("#txtEdad").css('border', '1px solid red')
+                }
+                return false
+            }
+        } else {
+
+            if (id == "txtEdad") {
+                $("#lblEdadErrorMessage").text("Solo se puede ingresar hasta 3 numeros")
+                $("#txtEdad").css('border', '1px solid red')
+            }
+            return false
+        }
+    }
+
+    function Correo() {
+        var correo = document.getElementById('txtEmail').value;
+        var confirm_correo = document.getElementById('txtConfirmEmail').value; 
+
+        var expresion = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/
+
+
+        if (correo && confirm_correo == "") { 
+            $("#lblPasswordErrorMessage").text("Se requiere una contraseña")
+            $("#txtContraseña").css('border', '1px solid red')
+
+        } else {
+
+            if (correo == confirm_correo) {
+
+                if (expresion.test(correo)) {
+
+                    $("#lblCorreoErrorMessage").text("") 
+                    $("#txtEmail").css('border', '1px solid  #8ae34c', 'border - radius', '4px', 'box - shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)')  
+                    $("#txtConfirmEmail").css('border', '1px solid #8ae34c', 'border - radius', '4px', 'box - shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)')  
+
+                    return true
+                }
+                else {
+
+                    $("#lblCorreoErrorMessage").text("Ingrese una direccion de correo valida")
+                    $("#txtEmail").css('border', '1px solid red')
+                    $("#txtConfirmEmail").css('border', '1px solid red')
+
+                    return false
+                }
+            } else {
+
+                $("#lblCorreoErrorMessage").text("Los E-mails no coinciden")
+                $("#txtEmail").css('border', '1px solid red')
+                $("#txtConfirmEmail").css('border', '1px solid red')
+            }
+
+        }
+
+    }
+
+    function ValidationPassword() {
+        var pass = document.getElementById('txtContraseña').value; 
+        var confirm_pass = document.getElementById('txtConfirmContraseña').value; 
+
+        if (pass && confirm_pass == "") { 
+            $("#lblPasswordErrorMessage").text("Se requiere una contraseña")
+            $("#txtContraseña").css('border', '1px solid red')
+
+        } else {
+
+            if (pass == confirm_pass) {
+                if (/^(?=(?:.*\d))(?=.*[A-Z])(?=.*[a-z])(?=.*[.,*!?¿¡/#$%&])\S{8,64}$/.test(pass)) {
+
+                    $("#lblPasswordErrorMessage").text("") 
+                    $("#txtContraseña").css('border', '1px solid #8ae34c', 'border - radius', '4px', 'box - shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)')   
+                    $("#txtConfirmContraseña").css('border', '1px solid #8ae34c', 'border - radius', '4px', 'box - shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)')  
+                    return true
+                }
+                else {
+
+                    $("#lblPasswordErrorMessage").text("La constraseña tiene que tener: " + "- Al menos un número 0 - 9" +
+                        "- Al menos una mayúscula" +
+                        "- Al menos una minúscula" +
+                        "- Al menos un carácter especial(.,* !?¿¡/#$%&)" +
+                        "- Longitud mínima de 8 caracteres, 64 máxima" +
+                        "- No acepta espacios")
+                    $("#txtContraseña").css('border', '1px solid red')
+                    $("#txtConfirmContraseña").css('border', '1px solid red')
+
+                    return false
+                }
+            } else {
+
+                $("#lblPasswordErrorMessage").text("Las contraseñas no coinciden")
+                $("#txtContraseña").css('border', '1px solid red')
+                $("#txtConfirmContraseña").css('border', '1px solid red')
+            }
+        }
+    }
+
+</script>
