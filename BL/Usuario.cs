@@ -172,7 +172,6 @@ namespace BL
 
                                     result.Objects.Add(usuario);
                                 }
-
                                 result.Correct = true;
                             }
                             else

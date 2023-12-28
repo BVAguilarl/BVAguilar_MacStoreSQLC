@@ -326,9 +326,6 @@
         }
     }
 
-
-
-
     input[type=submit] {
         background-color: #dc7087;
         border: none;
@@ -372,7 +369,6 @@
 <script type="text/javascript">
 
     // ---- Validaciones de los campos
-    //evita que el campo de password lo autocomplete
     $(document).ready(function () {
         var some_id = $('#some_id');
         some_id.prop('type', 'text');
@@ -385,33 +381,27 @@
         var input = event.key
         var palabra = textbox.value
 
-
         if (/^[a-zA-Z]+$/.test(input)) {
             if (palabra != "") {
                 if (/^[A-Z][a-z]+$/.test(palabra + event.key)) {
 
                     if (id == "txtNombre") {
                         $("#lblNombreErrorMessage").text("")
-                        $("#txtNombre").css('border', '1px solid  #8ae34c', 'border - radius', '4px', 'box - shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)')   //desmarca el textbox que marca error
-
+                        $("#txtNombre").css('border', '1px solid  #8ae34c', 'border - radius', '4px', 'box - shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)')  
                     }
                     else {
                         if (id == "txtApellidoPaterno") {
                             $("#lblApellidoPaternoErrorMessage").text("")
-                            $("#txtApellidoPaterno").css('border', '1px solid  #8ae34c', 'border - radius', '4px', 'box - shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)')   //desmarca el textbox que marca error
-
+                            $("#txtApellidoPaterno").css('border', '1px solid  #8ae34c', 'border - radius', '4px', 'box - shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)')   
                         }
                         else {
                             if (id == "txtApellidoMaterno") {
                                 $("#lblApellidoMaternoErrorMessage").text("")
-                                $("#txtApellidoMaterno").css('border', '1px solid  #8ae34c', 'border - radius', '4px', 'box - shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)')   //desmarca el textbox que marca error
-
+                                $("#txtApellidoMaterno").css('border', '1px solid  #8ae34c', 'border - radius', '4px', 'box - shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)')   
                             }
                         }
                     }
-
                     return true
-
                 }
                 else {
 
@@ -429,12 +419,9 @@
                             }
                         }
                     }
-
                     return false
                 }
             }
-
-
         } else {
             if (id == "txtNombre") {
                 $("#lblNombreErrorMessage").text("Solo se aceptan letras en este campo")
@@ -480,13 +467,12 @@
     }
 
     function Correo() {
-        var correo = document.getElementById('txtEmail').value; //obtiene loa valores del txtContraseña
-        var confirm_correo = document.getElementById('txtConfirmEmail').value; //obtiene loa valores del txtConfirmContraseña
+        var correo = document.getElementById('txtEmail').value; 
+        var confirm_correo = document.getElementById('txtConfirmEmail').value; 
 
         var expresion = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/
 
-
-        if (correo && confirm_correo == "") { //validacion de si las contraseñas son iguales o no
+        if (correo && confirm_correo == "") { 
             $("#lblPasswordErrorMessage").text("Se requiere una contraseña")
             $("#txtContraseña").css('border', '1px solid red')
 
@@ -495,10 +481,9 @@
             if (correo == confirm_correo) {
 
                 if (expresion.test(correo)) {
-
-                    $("#lblCorreoErrorMessage").text("") //quita los datos del label de error
-                    $("#txtEmail").css('border', '1px solid  #8ae34c', 'border - radius', '4px', 'box - shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)')   //desmarca el textbox que marca error
-                    $("#txtConfirmEmail").css('border', '1px solid #8ae34c', 'border - radius', '4px', 'box - shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)')   //desmarca el textbox que marca error
+                    $("#lblCorreoErrorMessage").text("") 
+                    $("#txtEmail").css('border', '1px solid  #8ae34c', 'border - radius', '4px', 'box - shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)')  
+                    $("#txtConfirmEmail").css('border', '1px solid #8ae34c', 'border - radius', '4px', 'box - shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)')   
 
                     return true
                 }
@@ -516,16 +501,14 @@
                 $("#txtEmail").css('border', '1px solid red')
                 $("#txtConfirmEmail").css('border', '1px solid red')
             }
-
         }
-
     }
 
     function ValidationPassword() {
-        var pass = document.getElementById('txtContraseña').value; //obtiene loa valores del txtContraseña
-        var confirm_pass = document.getElementById('txtConfirmContraseña').value; //obtiene loa valores del txtConfirmContraseña
+        var pass = document.getElementById('txtContraseña').value; 
+        var confirm_pass = document.getElementById('txtConfirmContraseña').value; 
 
-        if (pass && confirm_pass == "") { //validacion de si las contraseñas son iguales o no
+        if (pass && confirm_pass == "") { 
             $("#lblPasswordErrorMessage").text("Se requiere una contraseña")
             $("#txtContraseña").css('border', '1px solid red')
 
@@ -534,9 +517,9 @@
             if (pass == confirm_pass) {
                 if (/^(?=(?:.*\d))(?=.*[A-Z])(?=.*[a-z])(?=.*[.,*!?¿¡/#$%&])\S{8,64}$/.test(pass)) {
 
-                    $("#lblPasswordErrorMessage").text("") //quita los datos del label de error
-                    $("#txtContraseña").css('border', '1px solid #8ae34c', 'border - radius', '4px', 'box - shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)')   //desmarca el textbox que marca error
-                    $("#txtConfirmContraseña").css('border', '1px solid #8ae34c', 'border - radius', '4px', 'box - shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)')   //desmarca el textbox que marca error
+                    $("#lblPasswordErrorMessage").text("") 
+                    $("#txtContraseña").css('border', '1px solid #8ae34c', 'border - radius', '4px', 'box - shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)')   
+                    $("#txtConfirmContraseña").css('border', '1px solid #8ae34c', 'border - radius', '4px', 'box - shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.075)')   
                     return true
                 }
                 else {
